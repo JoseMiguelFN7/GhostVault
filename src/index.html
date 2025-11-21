@@ -1,18 +1,18 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GhostVault - Comparte Mensajes Efímeros Seguros</title>
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
+  <title>GhostVault - Share Secure Ephemeral Messages</title>
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="./css/input.css">
+  <link rel="stylesheet" href="./css/output.css">
   <!-- Google Fonts - Inter (fuente moderna y limpia) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 
   <style>
     /* Configuración de fuente global */
@@ -71,12 +71,12 @@
   <!-- Layout Split-Screen: Grid de 2 columnas en desktop, 1 en mobile -->
   <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
-    <!-- ========== LADO IZQUIERDO: FORMULARIO ========== -->
-    <div class="flex items-center justify-center p-6 lg:p-12">
+    <!-- ========== LADO IZQUIERDO: INFO PANEL (BRANDING/MARKETING) ========== -->
+    <div class="flex items-center justify-center p-6 lg:p-12 bg-white/5 backdrop-blur-sm lg:border-r border-white/10">
       <div class="w-full max-w-xl">
 
-        <!-- Header del Formulario -->
-        <div class="mb-8">
+        <!-- Header con Logo GhostVault -->
+        <div class="mb-12">
           <!-- Ícono del candado con gradiente -->
           <div
             class="inline-flex items-center justify-center w-16 h-16 mb-4 bg-gradient-to-br from-violet-600 to-purple-600 rounded-2xl shadow-lg">
@@ -85,135 +85,18 @@
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
           </div>
-          <h1 class="text-4xl font-bold text-white mb-2 tracking-tight">GhostVault</h1>
-          <p class="text-slate-400 text-lg">Comparte mensajes de forma segura y efímera</p>
-        </div>
+          <h1 class="text-5xl font-bold text-white mb-4 tracking-tight">GhostVault</h1>
+          <p class="text-xl text-slate-400 mb-8">Share messages securely and ephemerally</p>
 
-        <!-- Formulario -->
-        <form id="ghostForm" class="space-y-6">
-
-          <!-- Campo de Mensaje -->
-          <div class="space-y-2">
-            <label for="message" class="block text-sm font-medium text-slate-300">
-              Mensaje Secreto
-            </label>
-            <textarea id="message" name="message" rows="4" placeholder="Escribe tu mensaje confidencial aquí..." class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
-                     focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
-                     transition-all duration-300 resize-none hover:bg-white/10 backdrop-blur-sm" required></textarea>
-            <p class="text-xs text-slate-500" id="charCount">0 / 1000 caracteres</p>
-          </div>
-
-          <!-- Campo de Contraseña -->
-          <div class="space-y-2">
-            <label for="password" class="block text-sm font-medium text-slate-300">
-              Contraseña de Protección
-            </label>
-            <div class="relative">
-              <input type="password" id="password" name="password" placeholder="Mínimo 6 caracteres" class="w-full px-4 py-3 pl-10 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
-                       focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
-                       transition-all duration-300 hover:bg-white/10 backdrop-blur-sm" minlength="6" required />
-              <!-- Ícono de candado -->
-              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" fill="none"
-                stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              <!-- Botón mostrar/ocultar contraseña -->
-              <button type="button" id="togglePassword"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
-                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Input de Archivo Personalizado -->
-          <div class="space-y-2">
-            <label class="block text-sm font-medium text-slate-300">
-              Archivos Adjuntos (Opcional)
-            </label>
-            <div id="dropZone"
-              class="relative border-2 border-dashed border-white/20 rounded-xl p-6 text-center cursor-pointer 
-                     bg-white/5 hover:bg-white/10 hover:border-violet-500/50 transition-all duration-300 group backdrop-blur-sm">
-              <svg class="w-10 h-10 mx-auto mb-2 text-slate-500 group-hover:text-violet-400 transition-colors"
-                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-              </svg>
-              <p class="text-white font-medium text-sm mb-1">Arrastra archivos o haz clic</p>
-              <p class="text-slate-600 text-xs">Máximo 10 MB</p>
-              <input type="file" id="fileInput" name="files" multiple class="file-input-hidden" accept="*/*" />
-            </div>
-            <div id="fileList" class="space-y-2 mt-3"></div>
-          </div>
-
-          <!-- Input Numérico Personalizado para Duración -->
-          <div class="space-y-2">
-            <label for="duration" class="block text-sm font-medium text-slate-300">
-              Tiempo de Expiración
-            </label>
-
-            <!-- Input Group: Input + Badge "Hours" -->
-            <div class="relative">
-              <input type="number" id="duration" name="duration" min="1" max="168" value="24" placeholder="24" class="w-full px-4 py-3 pr-20 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
-                       focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
-                       transition-all duration-300 hover:bg-white/10 backdrop-blur-sm" required />
-              <!-- Badge "Hours" fijo a la derecha del input -->
-              <div class="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 bg-violet-600/80 rounded-lg">
-                <span class="text-white text-sm font-medium">Hours</span>
-              </div>
-            </div>
-            <p class="text-xs text-slate-500">
-              Entre 1 hora y 168 horas (7 días)
-            </p>
-          </div>
-
-          <!-- Botón de Envío -->
-          <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-violet-600 to-purple-600 
-                   hover:from-violet-500 hover:to-purple-500 
-                   text-white font-semibold rounded-xl shadow-lg 
-                   transform hover:-translate-y-1 hover:shadow-xl 
-                   transition-all duration-300 
-                   glow-on-hover
-                   flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-            </svg>
-            <span>Crear GhostVault</span>
-          </button>
-
-        </form>
-
-        <!-- Footer con información de seguridad -->
-        <div class="mt-6 pt-6 border-t border-white/10">
-          <p class="text-slate-500 text-sm text-center">
-            🔒 Encriptación de extremo a extremo
-          </p>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ========== LADO DERECHO: PANEL DE INFORMACIÓN ========== -->
-    <div class="flex items-center justify-center p-6 lg:p-12 bg-white/5 backdrop-blur-sm lg:border-l border-white/10">
-      <div class="w-full max-w-xl">
-
-        <!-- Headline Principal -->
-        <div class="mb-12">
-          <h2 class="text-5xl font-bold text-white mb-4 leading-tight">
+          <h2 class="text-4xl font-bold text-white mb-4 leading-tight">
             Maximum Security,<br />
             <span class="bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
               Zero Knowledge
             </span>
           </h2>
           <p class="text-slate-400 text-lg">
-            Comparte información sensible sin dejar rastro. GhostVault utiliza encriptación en el navegador y tecnología
-            burn-on-read.
+            Share sensitive information without leaving a trace. GhostVault uses browser-based encryption and
+            burn-on-read technology.
           </p>
         </div>
 
@@ -235,7 +118,7 @@
             <div>
               <h3 class="text-white font-semibold text-lg mb-1">Burn-on-Read Technology</h3>
               <p class="text-slate-400 text-sm">
-                Los mensajes se autodestruyen automáticamente después de ser leídos una vez.
+                Messages automatically self-destruct after being read once.
               </p>
             </div>
           </div>
@@ -251,9 +134,9 @@
               </svg>
             </div>
             <div>
-              <h3 class="text-white font-semibold text-lg mb-1">Client-Side Encryption</h3>
+              <h3 class="text-white font-semibold text-lg mb-1">Zero-Knowledge Architecture</h3>
               <p class="text-slate-400 text-sm">
-                Tu mensaje se encripta en tu navegador antes de enviarse. Ni siquiera nosotros podemos leerlo.
+                Your message is encrypted in your browser before sending. Not even we can read it.
               </p>
             </div>
           </div>
@@ -271,185 +154,134 @@
             <div>
               <h3 class="text-white font-semibold text-lg mb-1">No Logs, No Traces</h3>
               <p class="text-slate-400 text-sm">
-                No almacenamos ningún registro de actividad. Privacidad total garantizada.
+                We store no activity logs. Total privacy guaranteed.
               </p>
             </div>
           </div>
 
         </div>
+      </div>
+    </div>
 
-        <!-- Ilustración/Placeholder 3D -->
-        <div
-          class="mt-12 p-8 bg-gradient-to-br from-violet-600/20 to-purple-600/20 rounded-2xl border border-violet-500/30 backdrop-blur-sm">
-          <div class="flex items-center justify-center">
-            <!-- Placeholder para ilustración 3D -->
-            <div class="text-center">
-              <div
-                class="inline-flex items-center justify-center w-24 h-24 mb-4 bg-gradient-to-br from-violet-600 to-purple-600 rounded-full shadow-2xl">
-                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <!-- ========== LADO DERECHO: FORM PANEL ========== -->
+    <div class="flex items-center justify-center p-6 lg:p-12">
+      <div class="w-full max-w-xl">
+
+        <!-- Formulario -->
+        <form id="ghostForm" class="space-y-6  ">
+          <h2 class="text-4xl font-bold text-white mb-4 tracking-tight">Enter your secret content</h2>
+          <!-- Campo de Mensaje -->
+          <div class="space-y-2">
+            <label for="message" class="block text-sm font-medium text-slate-300">
+              Secret message
+            </label>
+            <textarea id="message" name="message" rows="4" placeholder="Enter your secret message..." class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
+                     focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
+                     transition-all duration-300 resize-none hover:bg-white/10 backdrop-blur-sm"></textarea>
+            <p class="text-xs text-slate-500" id="charCount">0 / 1000 characters</p>
+          </div>
+
+
+          <!-- Input de Archivo Personalizado -->
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-slate-300">
+              File Upload (Optional)
+            </label>
+            <!-- Dropzone Container - Se oculta cuando hay 3 archivos -->
+            <div id="dropzoneContainer" class="transition-all duration-300">
+              <div id="dropZone"
+                class="relative border-2 border-dashed border-white/20 rounded-xl p-6 text-center cursor-pointer 
+                       bg-white/5 hover:bg-white/10 hover:border-violet-500/50 transition-all duration-300 group backdrop-blur-sm">
+                <svg class="w-10 h-10 mx-auto mb-2 text-slate-500 group-hover:text-violet-400 transition-colors"
+                  fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
+                <p class="text-white font-medium text-sm mb-1">Drag files or click to upload</p>
+                <p class="text-slate-600 text-xs" id="fileCountText">0 / 3 files selected | 10 MB max each</p>
+                <input type="file" id="fileInput" name="files" multiple class="file-input-hidden" />
               </div>
-              <h3 class="text-white font-semibold text-xl mb-2">Trusted by Privacy Advocates</h3>
-              <p class="text-slate-400 text-sm">
-                Más de 100,000 mensajes seguros enviados
-              </p>
+            </div>
+            <!-- File List Container -->
+            <div id="fileList" class="space-y-2 mt-3"></div>
+          </div>
+
+          <!-- Input Numérico Personalizado para Duración -->
+          <div class="space-y-2">
+            <label for="duration" class="block text-sm font-medium text-slate-300">
+              Expiration Time
+            </label>
+
+            <!-- Input Group: Input + Badge "Hours" -->
+            <div class="relative">
+              <input type="text" id="duration" name="duration" value="1" placeholder="1 (Default)" inputmode="numeric"
+                autocomplete="off" class="w-full px-4 py-3 pr-20 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
+                       focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
+                       transition-all duration-300 hover:bg-white/10 backdrop-blur-sm" />
+              <!-- Badge "Hours" fijo a la derecha del input -->
+              <div class="absolute right-3 top-1/2 -translate-y-1/2 px-3 py-1 bg-violet-600/80 rounded-lg">
+                <span class="text-white text-sm font-medium">Hours</span>
+              </div>
+            </div>
+            <p class="text-xs text-slate-500">
+              Between 1 hour and 168 hours (7 days)
+            </p>
+          </div>
+
+
+          <!-- Campo de Contraseña -->
+          <div class="space-y-2">
+            <label for="password" class="block text-sm font-medium text-slate-300">
+              Protection Password (Optional)
+            </label>
+            <div class="relative">
+              <input type="password" id="password" name="password" placeholder="Minimum 6 characters" class="w-full px-4 py-3 pl-10 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
+                                 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
+                                 transition-all duration-300 hover:bg-white/10 backdrop-blur-sm" minlength="6" />
+              <!-- Ícono de candado -->
+              <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" fill="none"
+                stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <!-- Botón mostrar/ocultar contraseña -->
+              <button type="button" id="togglePassword"
+                class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white transition-colors">
+                <svg id="eyeIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
             </div>
           </div>
-        </div>
+
+          <!-- Botón de Envío -->
+          <button type="submit" class="w-full py-4 px-6 bg-gradient-to-r from-violet-600 to-purple-600 
+                   hover:from-violet-500 hover:to-purple-500 
+                   text-white font-semibold rounded-xl shadow-lg 
+                   transform hover:-translate-y-1 hover:shadow-xl 
+                   transition-all duration-300 
+                   glow-on-hover
+                   flex items-center justify-center gap-2">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+            </svg>
+            <span>Create Secret</span>
+          </button>
+
+        </form>
+
+
 
       </div>
     </div>
 
   </div>
-
   <!-- JavaScript -->
-  <script>
-    // Contador de caracteres
-    const messageInput = document.getElementById('message');
-    const charCount = document.getElementById('charCount');
-
-    messageInput?.addEventListener('input', function () {
-      const length = this.value.length;
-      const maxLength = 1000;
-      charCount.textContent = `${length} / ${maxLength} caracteres`;
-
-      if (length > maxLength) {
-        this.value = this.value.substring(0, maxLength);
-      }
-    });
-
-    // Toggle visibilidad de contraseña
-    const passwordInput = document.getElementById('password');
-    const togglePasswordBtn = document.getElementById('togglePassword');
-    const eyeIcon = document.getElementById('eyeIcon');
-
-    togglePasswordBtn?.addEventListener('click', function () {
-      const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-      passwordInput.setAttribute('type', type);
-
-      if (type === 'text') {
-        eyeIcon.innerHTML = `
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-        `;
-      } else {
-        eyeIcon.innerHTML = `
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        `;
-      }
-    });
-
-    // Validación del input numérico de duración
-    const durationInput = document.getElementById('duration');
-
-    durationInput?.addEventListener('input', function () {
-      const value = parseInt(this.value);
-
-      if (value < 1) this.value = 1;
-      if (value > 168) this.value = 168;
-    });
-
-    // Manejo del input de archivos
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const fileList = document.getElementById('fileList');
-    let uploadedFiles = [];
-
-    dropZone?.addEventListener('click', () => fileInput.click());
-
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-      dropZone?.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-      });
-    });
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone?.addEventListener(eventName, () => {
-        dropZone.classList.add('border-violet-500', 'bg-violet-500/10');
-      });
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone?.addEventListener(eventName, () => {
-        dropZone.classList.remove('border-violet-500', 'bg-violet-500/10');
-      });
-    });
-
-    dropZone?.addEventListener('drop', function (e) {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-      handleFiles(files);
-    });
-
-    fileInput?.addEventListener('change', function (e) {
-      handleFiles(this.files);
-    });
-
-    function handleFiles(files) {
-      Array.from(files).forEach(file => {
-        if (file.size > 10 * 1024 * 1024) {
-          alert(`El archivo "${file.name}" excede el límite de 10 MB`);
-          return;
-        }
-
-        uploadedFiles.push(file);
-        displayFile(file);
-      });
-    }
-
-    function displayFile(file) {
-      const fileSize = (file.size / 1024).toFixed(2);
-      const fileSizeUnit = fileSize > 1024 ? `${(fileSize / 1024).toFixed(2)} MB` : `${fileSize} KB`;
-
-      const fileItem = document.createElement('div');
-      fileItem.className = 'flex items-center justify-between bg-white/5 backdrop-blur-sm px-4 py-3 rounded-lg border border-white/10';
-
-      fileItem.innerHTML = `
-        <div class="flex items-center gap-3 flex-1 min-w-0">
-          <svg class="w-5 h-5 text-violet-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          <div class="flex-1 min-w-0">
-            <p class="text-white font-medium truncate text-sm">${file.name}</p>
-            <p class="text-slate-500 text-xs">${fileSizeUnit}</p>
-          </div>
-        </div>
-        <button type="button" class="text-red-400 hover:text-red-300 transition-colors ml-2 flex-shrink-0" onclick="removeFile('${file.name}', this)">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-      `;
-
-      fileList.appendChild(fileItem);
-    }
-
-    function removeFile(fileName, button) {
-      uploadedFiles = uploadedFiles.filter(file => file.name !== fileName);
-      button.closest('div.flex').remove();
-    }
-
-    // Manejo del envío del formulario
-    const ghostForm = document.getElementById('ghostForm');
-
-    ghostForm?.addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const formData = {
-        message: messageInput.value,
-        password: passwordInput.value,
-        duration: durationInput.value,
-        files: uploadedFiles.map(f => ({ name: f.name, size: f.size }))
-      };
-
-      console.log('Datos del formulario:', formData);
-      alert(`¡GhostVault creado!\nExpira en ${formData.duration} horas\n(Esto es una demo)`);
-    });
-  </script>
-
+  <script src="./js/script.js"></script>
 </body>
 
 </html>

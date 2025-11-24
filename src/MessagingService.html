@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/index.css" />
+    <link rel="stylesheet" href="./css/input.css" />
+    <link rel="stylesheet" href="./css/output.css" />
+    <title>Mensajeria</title>
+
+    <style>
+      /* Configuración de fuente global */
+      body {
+        font-family: "Inter", system-ui, -apple-system, sans-serif;
+      }
+      /* Animación del gradiente de fondo (efecto cyberpunk sutil) */
+      @keyframes gradient-shift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+      .gradient-bg {
+        background: linear-gradient(
+          135deg,
+          #0f172a 0%,
+          #1e1b4b 50%,
+          #0f172a 100%
+        );
+        background-size: 200% 200%;
+        animation: gradient-shift 15s ease infinite;
+      }
+      /* Efecto glow para el botón principal */
+      .glow-on-hover:hover {
+        box-shadow: 0 0 20px rgba(124, 58, 237, 0.5),
+          0 0 40px rgba(124, 58, 237, 0.3);
+      }
+      /* Ocultar el input de archivo original pero mantenerlo funcional */
+      .file-input-hidden {
+        position: absolute;
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      /* Estilo para quitar flechas del input number en Chrome/Safari */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+      /* Estilo para Firefox */
+      input[type="number"] {
+        -moz-appearance: textfield;
+      }
+    </style>
+  </head>
+  <body class="gradient-bg min-h-screen antialiased">
+    <h1>Segunda Pagina</h1>
+  </body>
+</html>

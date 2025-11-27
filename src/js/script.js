@@ -360,9 +360,4 @@ ghostForm?.addEventListener("submit", function (e) {
     duration: durationInput.value,
     files: selectedFiles.map((f) => ({ name: f.name, size: f.size })),
   };
-
-  console.log("Datos del formulario:", formData);
-  alert(
-    `GhostVault created!\nExpires in ${formData.duration} hours\nFiles attached: ${selectedFiles.length}\n(This is a demo)`
-  );
 });

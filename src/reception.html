@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secret Revealed - GhostVault</title>
+
+  <!-- Google Fonts - Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="shortcut icon" href="../assets/GhostVault-icon.ico" type="image/x-icon">
+
+  <!-- Tailwind CSS Compilado -->
+  <link rel="stylesheet" href="./css/output.css">
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    /* Animación del gradiente de fondo */
+    @keyframes gradient-shift {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+      background-size: 200% 200%;
+      animation: gradient-shift 15s ease infinite;
+    }
+
+    /* Animación de pulso para el indicador de estado */
+    @keyframes pulse-glow {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.5;
+      }
+    }
+
+    .pulse-glow {
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4 antialiased">
+
+  <!-- Contenedor Principal - Glassmorphism Card Centrada -->
+  <div class="w-full max-w-3xl">
+
+    <div class="bg-white/5 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8 md:p-12">
+
+      <!-- ========== HEADER / WARNING ========== -->
+      <div class="text-center mb-8">
+        <!-- Logo + Title Container (Horizontal Layout) -->
+        <div class="flex flex-row items-center gap-4 justify-center mb-4">
+          <!-- Logo Icon -->
+          <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl shadow-lg flex-shrink-0">
+            <img src="../assets/GhostVault.svg" alt="Logo GhostVault">
+          </div>
+          <!-- Page Title -->
+          <h1 class="text-5xl font-bold text-violet-400 tracking-tight">GhostVault</h1>
+        </div>
+
+        <h1 class="text-4xl font-bold text-white mb-4 tracking-tight">Secret Revealed</h1>
+
+        <!-- Warning Alert con ícono de fuego -->
+        <div
+          class="inline-flex items-center gap-2 px-4 py-2 bg-orange-500/10 border border-orange-500/30 rounded-lg backdrop-blur-sm">
+          <svg class="w-5 h-5 text-orange-400 pulse-glow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z" />
+          </svg>
+          <span class="text-orange-400 font-medium text-sm">
+            Status: BURNED. This secret has been deleted from our servers.
+          </span>
+        </div>
+
+        <p class="text-slate-400 mt-3 text-sm">
+          Copy this information now before closing this tab. It cannot be recovered.
+        </p>
+      </div>
+
+      <!-- ========== MESSAGE CONTENT (READ-ONLY) ========== -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-300 mb-2">
+          Secret Message
+        </label>
+
+        <!-- Contenedor del mensaje con estilo de texto read-only -->
+        <div class="relative">
+          <div id="secretContent" class="w-full px-4 py-4 bg-black/30 border border-white/10 rounded-xl text-white 
+                   min-h-[120px] max-h-[300px] overflow-y-auto
+                   font-mono text-sm leading-relaxed backdrop-blur-sm"></div>
+
+          <!-- Botón Copiar al Portapapeles -->
+          <button id="copyBtn" class="mt-3 w-full py-3 px-4 bg-violet-600 hover:bg-violet-500 
+                   text-white font-semibold rounded-xl 
+                   transition-all duration-300 
+                   flex items-center justify-center gap-2
+                   focus:outline-none focus:ring-2 focus:ring-violet-400">
+            <svg id="copyIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+            <span id="copyText">Copy to Clipboard</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ========== ATTACHMENTS SECTION ========== -->
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-slate-300 mb-3">
+          Attached Files (3)
+        </label>
+
+        <!-- Lista de archivos -->
+        <div class="space-y-2">
+
+          <!-- File 1 -->
+          <div
+            class="flex items-center justify-between p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <!-- Ícono de archivo -->
+              <svg class="w-6 h-6 text-violet-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+
+              <div class="flex-1 min-w-0">
+                <p class="text-white font-medium truncate">confidential_document.pdf</p>
+                <p class="text-slate-500 text-sm">2.4 MB</p>
+              </div>
+            </div>
+
+            <!-- Botón Download -->
+            <button
+              class="ml-3 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span class="hidden sm:inline">Download</span>
+            </button>
+          </div>
+
+          <!-- File 2 -->
+          <div
+            class="flex items-center justify-between p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <svg class="w-6 h-6 text-violet-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+
+              <div class="flex-1 min-w-0">
+                <p class="text-white font-medium truncate">secret_blueprint_final_v3.png</p>
+                <p class="text-slate-500 text-sm">1.8 MB</p>
+              </div>
+            </div>
+
+            <button
+              class="ml-3 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span class="hidden sm:inline">Download</span>
+            </button>
+          </div>
+
+          <!-- File 3 -->
+          <div
+            class="flex items-center justify-between p-4 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl hover:bg-white/10 transition-all duration-300">
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <svg class="w-6 h-6 text-violet-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+              </svg>
+
+              <div class="flex-1 min-w-0">
+                <p class="text-white font-medium truncate">encryption_keys.txt</p>
+                <p class="text-slate-500 text-sm">124 KB</p>
+              </div>
+            </div>
+
+            <button
+              class="ml-3 px-4 py-2 bg-violet-600 hover:bg-violet-500 text-white font-medium rounded-lg transition-colors flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span class="hidden sm:inline">Download</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ========== FOOTER / DISMISSAL ========== -->
+      <div class="pt-6 border-t border-white/10">
+        <p class="text-center text-slate-500 text-xs mt-4">
+          Closing this page will clear all content from your browser's memory
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- JavaScript con fallback para copiar -->
+  <script>
+    // Copiar al portapapeles (con fallback para mayor compatibilidad)
+    const copyBtn = document.getElementById('copyBtn');
+    const copyIcon = document.getElementById('copyIcon');
+    const copyText = document.getElementById('copyText');
+    const secretContent = document.getElementById('secretContent');
+
+    // Función helper para copiar con fallback
+    async function copyToClipboard(text) {
+      // Método 1: Intentar con la API moderna (solo funciona en HTTPS o localhost)
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        try {
+          await navigator.clipboard.writeText(text);
+          return true;
+        } catch (err) {
+          console.warn('Clipboard API falló, usando fallback:', err);
+        }
+      }
+
+      // Método 2: Fallback usando textarea y execCommand (funciona en file://)
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+
+      try {
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textarea);
+        return successful;
+      } catch (err) {
+        document.body.removeChild(textarea);
+        throw new Error('No se pudo copiar al portapapeles');
+      }
+    }
+
+    copyBtn?.addEventListener('click', async function () {
+      try {
+        const success = await copyToClipboard(secretContent.textContent);
+
+        if (success) {
+          // Feedback visual
+          copyText.textContent = 'Copied!';
+          copyIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+          `;
+
+          // Restaurar después de 2 segundos
+          setTimeout(() => {
+            copyText.textContent = 'Copy to Clipboard';
+            copyIcon.innerHTML = `
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            `;
+          }, 2000);
+        }
+
+      } catch (err) {
+        console.error('Error al copiar:', err);
+        alert('No se pudo copiar al portapapeles. Por favor, selecciona y copia manualmente el texto.');
+      }
+    });
+  </script>
+
+  <!-- API Integration Scripts -->
+  <script src="./js/config.js"></script>
+  <script src="./js/reception.js"></script>
+
+</body>
+
+</html>

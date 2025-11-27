@@ -1,0 +1,216 @@
+/**
+ * GhostVault - Formulario Integración API
+ */
+
+const ghForm = document.getElementById("ghostForm");
+const msgInput = document.getElementById("message");
+const pwdInput = document.getElementById("password");
+const durInput = document.getElementById("duration");
+const submitButton = ghForm?.querySelector('button[type="submit"]');
+
+ghForm?.addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const content = msgInput.value.trim();
+  const password = pwdInput.value.trim();
+  const expiresInHours = parseInt(durInput.value) || 1;
+
+  if (!content) {
+    alert("❌ Por favor, escribe un mensaje secreto");
+    return;
+  }
+
+  if (password && password.length < 6) {
+    alert("❌ La contraseña debe tener al menos 6 caracteres");
+    return;
+  }
+
+  const secretData = {
+    content: content,
+    requires_password: password.length > 0,
+    expires_in_hours: expiresInHours,
+    files: [],
+  };
+
+  if (password) {
+    secretData.password = password;
+  }
+
+  const originalHTML = submitButton.innerHTML;
+  submitButton.disabled = true;
+  submitButton.innerHTML =
+    '<svg class="animate-spin w-5 h-5 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Creating...';
+
+  try {
+    const response = await createSecret(secretData);
+    console.log("✅ Secret created:", response);
+
+    if (response.uuid) {
+      const baseUrl = window.location.origin;
+      const secretUrl = baseUrl + "/GhostVault/s/" + response.uuid;
+
+      console.log("🔍 Base URL:", baseUrl);
+      console.log("🔍 UUID:", response.uuid);
+      console.log("🔍 Full URL:", secretUrl);
+
+      showSuccessModal(secretUrl, {
+        uuid: response.uuid,
+        expires_in_hours: expiresInHours,
+      });
+
+      ghForm.reset();
+      const charCount = document.getElementById("charCount");
+      if (charCount) charCount.textContent = "0 / 1000 characters";
+    } else {
+      throw new Error("Missing UUID in response");
+    }
+  } catch (error) {
+    console.error("❌ Error:", error);
+    let msg = "No se pudo crear el secret. ";
+
+    if (!navigator.onLine) {
+      msg += "Sin conexión.";
+    } else if (error.message.includes("API Error: 401")) {
+      msg += "API Key inválida.";
+    } else {
+      msg += error.message || "Error desconocido.";
+    }
+
+    alert("❌ " + msg);
+  } finally {
+    submitButton.disabled = false;
+    submitButton.innerHTML = originalHTML;
+  }
+});
+
+// Modal de éxito - Centrado y más ancho
+function showSuccessModal(url, data) {
+  const oldModal = document.getElementById("successModal");
+  if (oldModal) oldModal.remove();
+
+  console.log("📋 Showing modal with URL:", url);
+
+  const modal = document.createElement("div");
+  modal.id = "successModal";
+  modal.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.75);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+  `;
+
+  const content = document.createElement("div");
+  content.style.cssText = `
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    max-width: 42rem;
+    width: 100%;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+    margin: auto;
+  `;
+
+  content.innerHTML = `
+    <div style="text-align: center; margin-bottom: 1.5rem;">
+      <div style="display: inline-flex; align-items: center; justify-content: center; width: 4rem; height: 4rem; background: rgba(34, 197, 94, 0.2); border-radius: 9999px; margin-bottom: 1rem;">
+        <svg style="width: 2rem; height: 2rem; color: #4ade80;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        </svg>
+      </div>
+      <h2 style="font-size: 1.75rem; font-weight: bold; color: white; margin-bottom: 0.5rem;">¡Secret Created!</h2>
+      <p style="color: #cbd5e1; font-size: 0.9375rem;">Share this URL with the recipient</p>
+    </div>
+    
+    <div style="background: rgba(0,0,0,0.4); border-radius: 0.75rem; padding: 1.25rem; margin-bottom: 1.5rem; border: 1px solid rgba(255,255,255,0.15);">
+      <p id="secretUrlText" style="color: white; font-family: 'Courier New', monospace; font-size: 0.9375rem; word-break: break-all; margin: 0; line-height: 1.6;">${url}</p>
+    </div>
+    
+    <div style="display: flex; gap: 0.75rem; margin-bottom: 1.25rem;">
+      <button id="copyUrlBtn" style="flex: 1; padding: 0.875rem; background: #7c3aed; color: white; font-weight: 600; border-radius: 0.625rem; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 0.5rem; transition: background 0.2s; font-size: 0.9375rem;">
+        <svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+        </svg>
+        Copy URL
+      </button>
+      <button id="closeModalBtn" style="padding: 0 1.75rem; border: 2px solid rgba(255,255,255,0.25); background: transparent; color: white; font-weight: 600; border-radius: 0.625rem; cursor: pointer; transition: all 0.2s; font-size: 0.9375rem;">
+        Close
+      </button>
+    </div>
+    
+    <div style="padding: 0.875rem; background: rgba(249, 115, 22, 0.1); border: 1px solid rgba(249, 115, 22, 0.3); border-radius: 0.625rem;">
+      <p style="color: #fdba74; font-size: 0.8125rem; margin: 0; line-height: 1.5;">
+        <strong>⚠️ Important:</strong> This URL will self-destruct after being viewed or in ${
+          data.expires_in_hours || 1
+        } hour(s).
+      </p>
+    </div>
+  `;
+
+  modal.appendChild(content);
+  document.body.appendChild(modal);
+
+  // Hover effects
+  const copyBtn = document.getElementById("copyUrlBtn");
+  const closeBtn = document.getElementById("closeModalBtn");
+
+  copyBtn.addEventListener("mouseenter", () => {
+    copyBtn.style.background = "#6d28d9";
+  });
+  copyBtn.addEventListener("mouseleave", () => {
+    copyBtn.style.background = "#7c3aed";
+  });
+
+  closeBtn.addEventListener("mouseenter", () => {
+    closeBtn.style.background = "rgba(255,255,255,0.1)";
+  });
+  closeBtn.addEventListener("mouseleave", () => {
+    closeBtn.style.background = "transparent";
+  });
+
+  // Copy button
+  copyBtn.addEventListener("click", async () => {
+    const urlText = document.getElementById("secretUrlText").textContent;
+
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(urlText);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = urlText;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+
+      copyBtn.textContent = "✓ Copied!";
+      setTimeout(() => {
+        copyBtn.innerHTML =
+          '<svg style="width: 1.25rem; height: 1.25rem;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg> Copy URL';
+      }, 2000);
+    } catch (err) {
+      console.error("Copy failed:", err);
+      alert("❌ Could not copy.");
+    }
+  });
+
+  // Close
+  closeBtn.addEventListener("click", () => modal.remove());
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) modal.remove();
+  });
+}
+
+console.log("✅ GhostVault Form API loaded");

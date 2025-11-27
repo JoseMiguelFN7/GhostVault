@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./css/index.css" />
-    <link rel="stylesheet" href="./css/input.css" />
-    <link rel="stylesheet" href="./css/output.css" />
+    
+    
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Mensajeria</title>
 
     <style>
@@ -57,7 +57,27 @@
       }
     </style>
   </head>
-  <body class="gradient-bg min-h-screen antialiased">
-    <h1>Segunda Pagina</h1>
+  <body class="h-full min-h-screen flex flex-col ">
+
+    <!-- Header -->
+
+    <div class="w-full h-1/8 bg-slate-800 flex items-center pl-28 p-2 ">
+      <img class="w-16 h-16 rounded-2xl shadow-lg" src="../assets/GhostVault-icon.ico" alt="">
+      <h1 class="pl-4 text-4xl text-violet-400">GhostVault</h1>
+    </div>
+
+    <!-- Content Messaging  -->
+     
+    <div class=" w-full grow bg-slate-800 flex flex-col  justify-center items-center" >
+      <h2 class=" text-4xl text-violet-400 p-2"> Mensaje Secreto </h2>
+      <div id="messages-container"  class=" w-3/4 h-4/5  border-2 rounded-md border-violet-800 pb-12 bg-violet-900/15 overflow-auto">
+
+      </div>
+
+
+    </div>
+
+    <script src="./js/Messages.js"></script>
   </body>
-</html>
+  
+  </html>

@@ -3,10 +3,10 @@
  */
 
 const ENV = {
-  API_DOMAIN: "https://margarita-truthless-fonda.ngrok-free.dev",
-  API_KEY: "etbr542gvwv_wv561fbvv_rfber_secretkey",
-  APP_ENV: "development",
-  APP_DEBUG: true,
+  API_DOMAIN: "",
+  API_KEY: "",
+  APP_ENV: "",
+  APP_DEBUG: "",
 };
 
 async function apiRequest(endpoint, options = {}) {

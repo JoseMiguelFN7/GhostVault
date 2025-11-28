@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # RewriteBase / permite acceder desde http://localhost/s/uuid
+    RewriteBase /
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    
+    # Redirigir /s/uuid a /GhostVault/src/reception.html?uuid=xxx
+    RewriteRule ^s/([a-zA-Z0-9-]+)/?$ /GhostVault/src/reception.html?uuid=$1 [R=302,L,QSA]
+</IfModule>

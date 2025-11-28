@@ -129,6 +129,58 @@ const fileCountText = document.getElementById("fileCountText");
 let selectedFiles = [];
 const MAX_FILES = 3;
 
+// Mostrar error inline cerca del elemento
+function showInlineError(targetElement, message) {
+  // Remover error anterior si existe
+  const oldError = document.getElementById("inlineError");
+  if (oldError) oldError.remove();
+
+  // Cambiar borde a rojo (si es un input)
+  if (
+    targetElement.tagName === "INPUT" ||
+    targetElement.tagName === "TEXTAREA"
+  ) {
+    targetElement.style.borderColor = "#ef4444";
+    targetElement.style.boxShadow = "0 0 0 3px rgba(239, 68, 68, 0.1)";
+  }
+
+  // Crear tooltip
+  const errorTooltip = document.createElement("div");
+  errorTooltip.id = "inlineError";
+  errorTooltip.style.cssText = `
+    position: absolute;
+    background: rgba(20, 20, 20, 0.95);
+    color: #ef4444;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    z-index: 50;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    max-width: 20rem;
+  `;
+  errorTooltip.textContent = message;
+
+  // Insertar después del elemento
+  targetElement.parentElement.style.position = "relative";
+  targetElement.parentElement.appendChild(errorTooltip);
+
+  // Remover error con timer
+  setTimeout(() => {
+    if (document.getElementById("inlineError")) {
+      errorTooltip.remove();
+      if (
+        targetElement.tagName === "INPUT" ||
+        targetElement.tagName === "TEXTAREA"
+      ) {
+        targetElement.style.borderColor = "";
+        targetElement.style.boxShadow = "";
+      }
+    }
+  }, 5000);
+}
+
 // Actualiza la UI basada en el estado actual
 function updateFileUI() {
   const fileCount = selectedFiles.length;
@@ -290,7 +342,21 @@ function handleFiles(files) {
   const result = validateAndSanitizeFiles(files);
 
   if (!result.valid) {
-    alert(result.error);
+    // Mostrar error en el dropzone
+    const dropZone = document.getElementById("dropZone");
+    if (dropZone) {
+      // Agregar borde rojo al dropzone
+      dropZone.style.borderColor = "#ef4444";
+      dropZone.style.backgroundColor = "rgba(239, 68, 68, 0.05)";
+
+      showInlineError(dropZone, result.error);
+
+      // Remover borde rojo después de 5 segundos
+      setTimeout(() => {
+        dropZone.style.borderColor = "";
+        dropZone.style.backgroundColor = "";
+      }, 5000);
+    }
     return false;
   }
 
@@ -340,29 +406,10 @@ const ghostForm = document.getElementById("ghostForm");
 ghostForm?.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  // ========== GLOBAL EMPTY STATE VALIDATION ==========
-  // Check if BOTH message AND files are empty (OR condition)
-  const messageText = messageInput.value.trim();
-  const hasFiles = selectedFiles.length > 0;
-
-  if (messageText === "" && !hasFiles) {
-    // BLOCK SUBMISSION - User must provide either text or files
-    alert(
-      "⚠️ Empty Submission Blocked\n\nYou must provide either text or a file to create a secret."
-    );
-    return; // Stop execution immediately
-  }
-  // ====================================================
-
   const formData = {
     message: messageInput.value,
     password: passwordInput.value,
     duration: durationInput.value,
     files: selectedFiles.map((f) => ({ name: f.name, size: f.size })),
   };
-
-  console.log("Datos del formulario:", formData);
-  alert(
-    `GhostVault created!\nExpires in ${formData.duration} hours\nFiles attached: ${selectedFiles.length}\n(This is a demo)`
-  );
 });

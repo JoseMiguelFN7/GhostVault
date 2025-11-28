@@ -235,9 +235,8 @@
               Protection Password (Optional)
             </label>
             <div class="relative">
-              <input type="password" id="password" name="password" placeholder="Minimum 6 characters" class="w-full px-4 py-3 pl-10 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 
-                                 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent 
-                                 transition-all duration-300 hover:bg-white/10 backdrop-blur-sm" minlength="6" />
+              <input type="password" id="password" name="password" placeholder="Minimum 6 characters"
+                class="w-full px-4 py-3 pl-10 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all duration-300 hover:bg-white/10 backdrop-blur-sm" />
               <!-- Ícono de candado -->
               <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" fill="none"
                 stroke="currentColor" viewBox="0 0 24 24">
@@ -280,7 +279,9 @@
     </div>
 
   </div>
-  <!-- JavaScript - API Integration -->
+  <!-- JavaScript - API Integration - Encryption Module -->
+  <script src="./js/vendor/crypto-js.js"></script>
+  <script src="./js/crypto.js"></script>
   <script src="./js/config.js"></script>
   <script src="./js/form-api.js"></script>
   <script src="./js/script.js"></script>

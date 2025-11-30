@@ -258,7 +258,7 @@ function validateAndSanitizeFiles(files) {
   if (filesCount > availableSlots) {
     return {
       valid: false,
-      error: `❌ File Limit Exceeded!\n\nYou selected ${filesCount} file(s). Limit is ${MAX_FILES}.\nCurrent: ${selectedFiles.length}/${MAX_FILES}\n\nPlease remove files before adding new ones, or select fewer files.`,
+      error: `File limit exceeded. You selected ${filesCount} file(s), limit is ${MAX_FILES}. Current: ${selectedFiles.length}/${MAX_FILES}. Please remove files before adding new ones.`,
       files: [],
     };
   }
@@ -302,7 +302,7 @@ function validateAndSanitizeFiles(files) {
     if (forbiddenExtensions.includes(extension)) {
       return {
         valid: false,
-        error: `🚫 Security Threat Detected!\n\nFile: "${file.name}"\nType: Executable/Script (${extension})\n\nFor security reasons, executable files and scripts are not allowed.\n\nAllowed: Documents, images, archives, etc.`,
+        error: `This type of file is not allowed (${extension}).`,
         files: [],
       };
     }
@@ -310,7 +310,7 @@ function validateAndSanitizeFiles(files) {
     if (!file.type || file.type === "" || suspiciousMimes.includes(file.type)) {
       return {
         valid: false,
-        error: `🚫 Security Threat Detected!\n\nFile: "${file.name}"\nReason: Suspicious or missing file type\n\nThis file appears to be an executable or has no valid MIME type.\nFor security, it cannot be uploaded.`,
+        error: `This file has a suspicious or missing file type and cannot be uploaded for security reasons.`,
         files: [],
       };
     }
@@ -318,13 +318,11 @@ function validateAndSanitizeFiles(files) {
     if (file.size > 10 * 1024 * 1024) {
       return {
         valid: false,
-        error: `📦 File Too Large!\n\nFile: "${file.name}"\nSize: ${(
+        error: `File too large. "${file.name}" is ${(
           file.size /
           1024 /
           1024
-        ).toFixed(
-          2
-        )} MB\n\nMaximum allowed: 10 MB\n\nPlease select a smaller file.`,
+        ).toFixed(2)} MB. Maximum allowed is 10 MB.`,
         files: [],
       };
     }

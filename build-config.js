@@ -16,10 +16,6 @@ const appDebug = process.env.APP_DEBUG === "true";
 // Normalize API_DOMAIN - remove trailing slash to prevent //
 apiDomain = apiDomain.replace(/\/+$/, "");
 
-console.log("🔧 Building config.js from .env...");
-console.log("📡 API Domain:", apiDomain);
-console.log("🔑 API Key:", apiKey ? "***" + apiKey.slice(-4) : "NOT SET");
-
 // Generate config.js content
 const configContent = `/**
  * GhostVault - API Configuration
@@ -60,8 +56,7 @@ async function apiRequest(endpoint, options = {}) {
     const response = await fetch(url, mergedOptions);
     const responseText = await response.text();
 
-    console.log("📡 API Response Status:", response.status);
-    console.log("📡 API Response Text:", responseText.substring(0, 300));
+   
 
     if (!response.ok) {
       let errorData = {};
@@ -116,14 +111,8 @@ async function getSecret(uuid) {
   return await apiRequest(\`/api/v1/secrets/\${uuid}\`, {
     method: "GET",
   });
-}
-
-console.log("✅ GhostVault API Config loaded");
-console.log("📡 API Domain:", ENV.API_DOMAIN);
-`;
+}`;
 
 // Write to src/js/config.js
 const outputPath = path.join(__dirname, "src", "js", "config.js");
 fs.writeFileSync(outputPath, configContent, "utf-8");
-
-console.log("✅ config.js generated successfully at:", outputPath);

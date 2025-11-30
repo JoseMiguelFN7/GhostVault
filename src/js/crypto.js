@@ -1,6 +1,6 @@
 /**
  * GhostVault - Client-Side Encryption Module
- * Maneja la encriptación/desencriptación de mensajes usando CryptoJS
+ * Maneja la encriptación/desencriptación de mensajes y archivos usando CryptoJS
  *
  * CryptoJS debe cargarse ANTES de este script en index.html
  */
@@ -15,11 +15,6 @@ function generateSecureKey() {
 
   // Convertir a Base64 para facilitar transmisión en URL
   const key = CryptoJS.enc.Base64.stringify(randomBytes);
-
-  console.log(
-    "🔑 Generated secure key (Base64):",
-    key.substring(0, 20) + "..."
-  );
 
   return key;
 }
@@ -37,10 +32,6 @@ function encryptMessage(content, key) {
 
     // Convertir a string Base64 para almacenamiento
     const encryptedString = encrypted.toString();
-
-    console.log("🔒 Message encrypted successfully");
-    console.log("   Original length:", content.length, "chars");
-    console.log("   Encrypted length:", encryptedString.length, "chars");
 
     return encryptedString;
   } catch (error) {
@@ -67,13 +58,99 @@ function decryptMessage(encryptedContent, key) {
       throw new Error("Decryption produced empty result - wrong key?");
     }
 
-    console.log("🔓 Message decrypted successfully");
-    console.log("   Decrypted length:", decryptedString.length, "chars");
-
     return decryptedString;
   } catch (error) {
     console.error("❌ Decryption failed:", error);
     throw new Error("Failed to decrypt message: " + error.message);
+  }
+}
+
+/**
+ * Convert File object to Base64 string
+ * @param {File} file - File object to convert
+ * @returns {Promise<string>} - Resolves with Base64 string
+ */
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      // Result includes "data:mime/type;base64,..." prefix
+      // Extract only the Base64 part
+      const base64 = reader.result.split(",")[1];
+      resolve(base64);
+    };
+
+    reader.onerror = (error) => {
+      console.error("❌ FileReader error:", error);
+      reject(error);
+    };
+
+    reader.readAsDataURL(file);
+  });
+}
+
+/**
+ * Encrypt a file (name and content)
+ * @param {File} file - File object to encrypt
+ * @param {string} key - Encryption key (same as message encryption)
+ * @returns {Promise<Object>} - Resolves with { encrypted_name, file_data }
+ */
+async function encryptFile(file, key) {
+  try {
+    // Convert file to Base64
+    const base64Content = await fileToBase64(file);
+
+    // Encrypt filename (including extension)
+    const encryptedName = CryptoJS.AES.encrypt(file.name, key).toString();
+
+    // Encrypt Base64 content
+    const encryptedContent = CryptoJS.AES.encrypt(
+      base64Content,
+      key
+    ).toString();
+
+    return {
+      encrypted_name: encryptedName,
+      file_data: encryptedContent,
+    };
+  } catch (error) {
+    console.error(`❌ Error encrypting file ${file.name}:`, error);
+    throw error;
+  }
+}
+
+/**
+ * Decrypt a file
+ * @param {Object} encryptedFile - Object with { encrypted_name, file_data }
+ * @param {string} key - Decryption key
+ * @returns {Object} - { filename, base64Content }
+ */
+function decryptFile(encryptedFile, key) {
+  try {
+    // Decrypt filename
+    const decryptedName = CryptoJS.AES.decrypt(
+      encryptedFile.encrypted_name,
+      key
+    ).toString(CryptoJS.enc.Utf8);
+
+    // Decrypt Base64 content
+    const decryptedContent = CryptoJS.AES.decrypt(
+      encryptedFile.file_data,
+      key
+    ).toString(CryptoJS.enc.Utf8);
+
+    if (!decryptedName || !decryptedContent) {
+      throw new Error("File decryption failed - invalid key");
+    }
+
+    return {
+      filename: decryptedName,
+      base64Content: decryptedContent,
+    };
+  } catch (error) {
+    console.error("❌ File decryption error:", error);
+    throw new Error("File decryption failed - invalid key");
   }
 }
 
@@ -87,20 +164,17 @@ function getKeyFromURL() {
   if (hash && hash.length > 1) {
     // Remover el # inicial
     const key = hash.substring(1);
-    console.log("🔑 Key extracted from URL hash");
     return key;
   }
-
-  console.log("ℹ️ No key found in URL hash");
   return null;
 }
-
-console.log("✅ GhostVault Crypto Module loaded");
-
 // Exportar funciones para uso en otros scripts
 window.GhostVaultCrypto = {
   generateSecureKey,
   encryptMessage,
   decryptMessage,
+  encryptFile,
+  decryptFile,
+  fileToBase64,
   getKeyFromURL,
 };

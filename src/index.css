@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .gradient-bg {
+    background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+    background-size: 200% 200%;
+  }
+  
+  /* The custom glow effect from your HTML */
+  .glow-on-hover:hover {
+    box-shadow: 0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.3);
+  }
+}
+
+@layer base {
+  body {
+    @apply gradient-bg animate-gradient-shift text-slate-300 font-sans antialiased min-h-screen;
+  }
+
+  /* Remove arrows/spinners from Number Inputs (Chrome, Safari, Edge, Opera) */
+  input::-webkit-outer-spin-button,
+  input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Remove arrows/spinners from Number Inputs (Firefox) */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+}

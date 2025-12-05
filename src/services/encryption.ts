@@ -1,22 +1,11 @@
 import CryptoJS from 'crypto-js';
 
-// Interface for the data structure we want to hide
-interface SecretData {
-    message: string;
-    files: Array<{
-        name: string;
-        type: string;
-        size: number;
-        content: string; // Base64 content
-    }>;
-}
-
 /**
  * Generates a random alphanumeric password if the user didn't provide one.
  * Length: 16 characters for strong entropy.
  */
 export const generateKey = (length = 16): string => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@$%^&*';
     let result = '';
     for (let i = 0; i < length; i++) {
         result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -25,34 +14,27 @@ export const generateKey = (length = 16): string => {
 };
 
 /**
- * Encrypts the payload using AES (Advanced Encryption Standard).
- * * @param data - The object containing message and files
+ * Encrypts any string using AES.
+ * Used for: Message body, File Names, and File Content (Base64).
+ * @param text - The raw string to encrypt
  * @param secretKey - The password used to lock the data
- * @returns The ciphertext string
  */
-export const encryptPayload = (data: SecretData, secretKey: string): string => {
-    // 1. Convert the complex object into a simple JSON string
-    const jsonString = JSON.stringify(data);
-
-    // 2. Encrypt using AES
-    // CryptoJS handles IV and Salt automatically by default unless specified otherwise.
-    const encrypted = CryptoJS.AES.encrypt(jsonString, secretKey).toString();
-
-    return encrypted;
+export const encryptString = (text: string, secretKey: string): string => {
+    if (!text) return ""; // Return empty string if input is null/undefined
+    return CryptoJS.AES.encrypt(text, secretKey).toString();
 };
 
 /**
- * Decrypts the payload.
- * (We will use this later in the Reception page)
+ * Decrypts a string.
+ * Used for recovering the message or file data.
  */
-export const decryptPayload = (cipherText: string, secretKey: string): SecretData | null => {
+export const decryptString = (cipherText: string, secretKey: string): string | null => {
     try {
         const bytes = CryptoJS.AES.decrypt(cipherText, secretKey);
-        const decryptedString = bytes.toString(CryptoJS.enc.Utf8);
-
-        if (!decryptedString) return null;
-
-        return JSON.parse(decryptedString) as SecretData;
+        const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+        
+        // If decryption results in empty string (wrong key or empty data), return null
+        return decrypted || null;
     } catch (error) {
         console.error("Decryption failed:", error);
         return null;

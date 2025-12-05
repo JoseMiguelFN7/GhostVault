@@ -4,7 +4,7 @@ import logo from '../assets/GhostVault.svg';
 
 export default function Home() {
     return (
-        // Main Layout: Grid 2 cols (matches your HTML structure)
+        // Main Layout: Grid 2 cols
         <div className="min-h-screen grid grid-cols-1 lg:grid-cols-2">
 
             {/* ========== LEFT PANEL: INFO ========== */}

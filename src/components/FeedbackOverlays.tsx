@@ -1,4 +1,4 @@
-import { Check, Copy, AlertTriangle } from 'lucide-react';
+import { Check, Copy, AlertTriangle, AlertCircle } from 'lucide-react';
 import { useState } from 'react';
 
 // --- LOADING OVERLAY ---
@@ -82,6 +82,42 @@ export const SuccessModal = ({ url, onClose }: SuccessModalProps) => {
                         <span className="font-bold">Important:</span> This URL will self-destruct after being viewed or in 1 hour(s).
                     </p>
                 </div>
+
+            </div>
+        </div>
+    );
+};
+
+// --- ERROR MODAL ---
+interface ErrorModalProps {
+    message: string;
+    onClose: () => void;
+}
+
+export const ErrorModal = ({ message, onClose }: ErrorModalProps) => {
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-fade-in">
+            {/* Same card as ErrorView with closing option */}
+            <div className="bg-[#121212] border border-red-500/30 w-full max-w-md rounded-3xl p-8 shadow-2xl relative text-center">
+
+                {/* Red Icon */}
+                <div className="w-20 h-20 bg-red-900/20 rounded-full flex items-center justify-center mx-auto mb-6 border border-red-500/20">
+                    <AlertCircle className="w-10 h-10 text-red-500" />
+                </div>
+
+                {/* Title and Message */}
+                <h2 className="text-2xl font-bold text-white mb-3">Error</h2>
+                <p className="text-slate-300 leading-relaxed mb-8">
+                    {message}
+                </p>
+
+                {/* Closing Button */}
+                <button
+                    onClick={onClose}
+                    className="w-full bg-red-600/10 hover:bg-red-600/20 border border-red-500/50 text-red-400 hover:text-red-300 font-semibold py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+                >
+                    Close
+                </button>
 
             </div>
         </div>

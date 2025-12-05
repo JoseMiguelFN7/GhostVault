@@ -9,6 +9,7 @@ const apiClient = axios.create({
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         'X-API-KEY': API_CONFIG.apiKey,
+        'ngrok-skip-browser-warning': 'true',
     },
 });
 
@@ -25,7 +26,7 @@ export interface CreateSecretPayload {
     files: EncryptedFilePayload[]; // Optional array
 }
 
-// Expected JSON response from the API
+// Expected JSON response from the API when creating a secret
 export interface SecretResponse {
     message: string;
     uuid: string;
@@ -33,18 +34,24 @@ export interface SecretResponse {
     expires_at: string;
 }
 
+// Data structure for secret data retrieval
+export interface SecretData {
+  content: string;            // Encrypted message
+  requires_password: boolean; // Flag to determine decryption method
+  files?: EncryptedFilePayload[]; // Optional array of files
+}
+
 export const secretService = {
     /**
      * Sends the structured payload to the backend.
      */
     createSecret: async (payload: CreateSecretPayload): Promise<SecretResponse> => {
-        // Note: Endpoint updated to /api/v1/secrets
         const response = await apiClient.post<SecretResponse>('/api/v1/secrets', payload);
         return response.data;
     },
 
-    getSecret: async (uuid: string) => {
-        const response = await apiClient.get(`/api/v1/secrets/${uuid}`);
+    getSecret: async (uuid: string): Promise<SecretData> => {
+        const response = await apiClient.get<SecretData>(`/api/v1/secrets/${uuid}`);
         return response.data;
     }
 };

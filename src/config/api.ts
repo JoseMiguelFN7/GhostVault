@@ -15,7 +15,7 @@ export const API_CONFIG = {
     env: import.meta.env.VITE_APP_ENV || 'development',
 
     // Timeout for requests (in milliseconds)
-    timeout: 10000,
+    timeout: 30000,
 };
 
 // Simple validation to ensure we don't run without critical config

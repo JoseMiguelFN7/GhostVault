@@ -1,14 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
-import { Upload, X, Eye, EyeOff, Lock, Send, AlertCircle } from 'lucide-react';
+import { Upload, X, Eye, EyeOff, Lock, Send } from 'lucide-react';
 import { fileToBase64 } from '../utils/fileHelper';
-import { encryptString, generateKey } from '../services/encryption';
+import { encryptString, encryptMessage, generateKey } from '../services/encryption';
 import { secretService, type EncryptedFilePayload } from '../services/api';
 import { ErrorTooltip } from './ErrorTooltip';
-// IMPORTAMOS LOS NUEVOS OVERLAYS
-import { LoadingOverlay, SuccessModal } from './FeedbackOverlays';
+import { LoadingOverlay, SuccessModal, ErrorModal } from './FeedbackOverlays';
 
-// ... (CONSTANTS & CONFIG se mantienen igual que antes) ...
+// (CONSTANTS & CONFIGS)
 const MAX_FILES = 3;
 const MAX_FILE_SIZE_MB = 10;
 const FORBIDDEN_EXTENSIONS = [".exe", ".bat", ".cmd", ".sh", ".php", ".pl", ".cgi", ".jar", ".vbs", ".msi", ".bin", ".py", ".js", ".app", ".com", ".scr", ".pif", ".apk", ".deb", ".rpm"];
@@ -35,11 +34,7 @@ export const CreateSecretForm = () => {
     const errorTimeoutRef = useRef<number | null>(null);
 
     // --- HELPERS & HANDLERS ---
-    // (Mantén aquí todas tus funciones helpers: triggerError, handlers de inputs, validation, etc.)
-    // Para ahorrar espacio en esta respuesta asumo que copias los handlers del paso anterior
-    // ... handleMessageChange, handleDurationChange, validateFiles, handleFilesAdd, handleDrop, removeFile ...
 
-    // Copia aquí los helpers y handlers que ya tenías en el código anterior:
     const triggerError = (field: string, msg: string) => {
         if (errorTimeoutRef.current) clearTimeout(errorTimeoutRef.current);
         setActiveError({ field, msg });
@@ -89,7 +84,11 @@ export const CreateSecretForm = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!message.trim() && files.length === 0) {
+        // Checks if there's at least a message or a file
+        const hasText = message.trim().length > 0;
+        const hasFiles = files.length > 0;
+
+        if (!hasText && !hasFiles) {
             triggerError('message', 'Please enter a message or attach at least one file');
             return;
         }
@@ -98,7 +97,7 @@ export const CreateSecretForm = () => {
             return;
         }
 
-        setIsLoading(true); // ESTO ACTIVARÁ EL OVERLAY
+        setIsLoading(true);
         setActiveError(null);
 
         try {
@@ -113,7 +112,8 @@ export const CreateSecretForm = () => {
             });
 
             const encryptedFiles = await Promise.all(encryptedFilesPromises);
-            const encryptedContent = encryptString(message, keyToUse);
+            // Encrypt the message content with magic token
+            const encryptedContent = encryptMessage(message, keyToUse);
 
             const payload = {
                 content: encryptedContent,
@@ -126,9 +126,9 @@ export const CreateSecretForm = () => {
 
             const finalLink = `${window.location.origin}/s/${response.uuid}#${keyToUse}`;
 
-            // Simular un pequeño delay para que se vea la animación de carga (opcional, se siente mejor UX)
+            // Delay for loading animation and UX
             setTimeout(() => {
-                setCreatedUrl(finalLink); // ESTO ACTIVARÁ EL MODAL DE ÉXITO
+                setCreatedUrl(finalLink);
                 setIsLoading(false);
             }, 800);
 
@@ -158,24 +158,19 @@ export const CreateSecretForm = () => {
                 />
             )}
 
+            {/* Global Error Modal */}
+            {activeError?.field === 'root' && (
+                <ErrorModal 
+                    message={activeError.msg} 
+                    onClose={() => setActiveError(null)} 
+                />
+            )}
 
-            {/* 2. THE FORM (Siempre visible, queda de fondo cuando salen los modales) */}
+            {/* 2. THE FORM */}
             <form onSubmit={handleSubmit} className="space-y-6 relative">
                 <h2 className="text-4xl font-bold text-white mb-4 tracking-tight">
                     Enter your secret content
                 </h2>
-
-                {/* GLOBAL ERROR ALERT */}
-                {activeError?.field === 'root' && (
-                    <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-xl flex items-start gap-3 animate-fade-in backdrop-blur-md">
-                        <AlertCircle className="w-5 h-5 text-red-400 mt-0.5 flex-shrink-0" />
-                        <div className="flex-1">
-                            <h4 className="text-red-400 font-bold text-sm">Error</h4>
-                            <p className="text-red-400/90 text-sm mt-0.5 leading-relaxed">{activeError.msg}</p>
-                        </div>
-                        <button type="button" onClick={() => setActiveError(null)} className="text-red-400/60 hover:text-red-400"><X className="w-4 h-4" /></button>
-                    </div>
-                )}
 
                 {/* MESSAGE INPUT */}
                 <div className="space-y-2 relative">
@@ -224,7 +219,7 @@ export const CreateSecretForm = () => {
                         </div>
                     )}
 
-                    {/* LISTA DE ARCHIVOS (Igual que antes) */}
+                    {/* FILES LIST */}
                     {files.length > 0 && (
                         <div className="space-y-2 mt-3 animate-fade-in">
                             {files.map((file, i) => (
@@ -245,7 +240,7 @@ export const CreateSecretForm = () => {
                     )}
                 </div>
 
-                {/* DURATION & PASSWORD (Igual que antes) */}
+                {/* DURATION & PASSWORD */}
                 <div className="space-y-2">
                     <label htmlFor="duration" className="block text-sm font-medium text-slate-300">Expiration Time</label>
                     <div className="relative">

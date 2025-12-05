@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import SecretView from './pages/SecretView';
 
 function App() {
   return (
@@ -8,7 +9,8 @@ function App() {
         {/* Route for the creation page (Home) */}
         <Route path="/" element={<Home />} />
         
-        {/* Later we will add the reading route: <Route path="/s/:uuid" ... /> */}
+        {/* Route for viewing a secret by its UUID */}
+        <Route path="/s/:uuid" element={<SecretView />} />
       </Routes>
     </BrowserRouter>
   );

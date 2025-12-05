@@ -98,25 +98,37 @@ The application will be available at http://localhost:5173 (or the port shown in
 
 ## 📁 Project Structure
 
-src/
-├── assets/                   # Static assets (Logos, icons)
-├── components/               # Reusable UI components
-│   ├── CreateSecretForm.tsx  # Main creation logic
-│   ├── FeedbackOverlays.tsx  # Modals (Success, Error, Loading)
-│   ├── ReceptionVisuals.tsx  # Visuals for the reading view
-│   └── ErrorTooltip.tsx      # Inline validation UI
-├── config/                   # Environment configuration
-│   └── api.ts                # Centralized env vars
-├── pages/                    # Main Route Views
-│   ├── Home.tsx              # Creation Landing Page
-│   └── SecretView.tsx        # Secret Reading/Decryption Page
-├── services/                 # Logic Layer
-│   ├── api.ts                # Axios setup & Endpoints
-│   └── encryption.ts         # AES Wrapper & Magic Token logic
-├── utils/                    # Helpers
-│   └── fileHelper.ts         # File to Base64 conversion
-├── App.tsx                   # Main Router Setup
-└── main.tsx                  # Entry Point
+```text
+GhostVault-Front-React/
+├── .env                            # Environment variables (gitignored)
+├── .env.example                    # Template for environment variables
+├── index.html                      # Entry HTML file
+├── package.json                    # Project dependencies and scripts
+├── tailwind.config.js              # Tailwind CSS configuration
+├── tsconfig.json                   # TypeScript configuration
+├── vite.config.ts                  # Vite configuration
+└── src/
+    ├── assets/                     # Static assets (Logos, images)
+    │   └── GhostVault.svg
+    ├── components/                 # Reusable UI components
+    │   ├── CreateSecretForm.tsx    # Main form logic for creating secrets
+    │   ├── ErrorTooltip.tsx        # Custom floating error feedback
+    │   ├── FeedbackOverlays.tsx    # Modals (Success, Error, Loading)
+    │   └── ReceptionVisuals.tsx    # Components for the secret view (Badge, Password)
+    ├── config/                     # Configuration files
+    │   └── api.ts                  # Centralized environment variables
+    ├── pages/                      # Main Application Views
+    │   ├── Home.tsx                # Landing page (Create Secret)
+    │   └── SecretView.tsx          # Reception page (Decrypt Secret)
+    ├── services/                   # Business Logic & API
+    │   ├── api.ts                  # Axios instance and API methods
+    │   └── encryption.ts           # AES-256 implementation & Magic Token logic
+    ├── utils/                      # Helper functions
+    │   └── fileHelper.ts           # File to Base64 converter
+    ├── App.tsx                     # Router configuration
+    ├── index.css                   # Global styles & Tailwind imports
+    └── main.tsx                    # Application entry point
+```
 
 ---
 

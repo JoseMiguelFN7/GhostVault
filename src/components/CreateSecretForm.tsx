@@ -124,7 +124,7 @@ export const CreateSecretForm = () => {
 
             const response = await secretService.createSecret(payload);
 
-            const finalLink = `${window.location.origin}/s/${response.uuid}${!password ? `#${encodeURIComponent(keyToUse)}` : ''}`;
+            const finalLink = `${window.location.origin}/s/${response.uuid}${!password ? `#${keyToUse}` : ''}`;
 
             // Delay for loading animation and UX
             setTimeout(() => {

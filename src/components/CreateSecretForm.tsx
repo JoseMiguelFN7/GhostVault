@@ -155,6 +155,7 @@ export const CreateSecretForm = () => {
                 <SuccessModal
                     url={createdUrl}
                     onClose={handleCloseModal}
+                    hours={parseInt(duration)}
                 />
             )}
 

@@ -18,10 +18,11 @@ export const LoadingOverlay = () => {
 // --- SUCCESS MODAL ---
 interface SuccessModalProps {
     url: string;
+    hours: number;
     onClose: () => void;
 }
 
-export const SuccessModal = ({ url, onClose }: SuccessModalProps) => {
+export const SuccessModal = ({ url, hours, onClose }: SuccessModalProps) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = async () => {
@@ -79,7 +80,7 @@ export const SuccessModal = ({ url, onClose }: SuccessModalProps) => {
                 <div className="bg-orange-500/10 border border-orange-500/20 rounded-xl p-4 flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0 mt-0.5" />
                     <p className="text-amber-500 text-sm leading-relaxed">
-                        <span className="font-bold">Important:</span> This URL will self-destruct after being viewed or in 1 hour(s).
+                        <span className="font-bold">Important:</span> This URL will self-destruct after being viewed or in {hours} hour(s).
                     </p>
                 </div>
 
